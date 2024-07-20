@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Store } from "@/types/types";
+import Navbar from "@/components/navbar/Navbar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -39,7 +40,8 @@ const DashboardLayout = async ({ children, params }: DashboardLayoutProps) => {
 
   return (
     <>
-      {params.storeId} {children}
+      <Navbar />
+      {children}
     </>
   );
 };

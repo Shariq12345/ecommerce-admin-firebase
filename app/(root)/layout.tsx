@@ -27,8 +27,6 @@ const SetupLayout = async ({ children }: SetupLayoutProps) => {
     return;
   });
 
-  console.log(store);
-
   if (store) {
     redirect(`/${store?.id}`);
   }

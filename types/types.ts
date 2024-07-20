@@ -5,3 +5,11 @@ export interface Store {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Billboards {
+  id: string;
+  label: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
