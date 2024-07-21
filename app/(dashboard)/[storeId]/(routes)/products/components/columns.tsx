@@ -2,39 +2,60 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import CellImage from "./cell-image";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export type BillboardColumn = {
+export type ProductColumn = {
   id: string;
-  label: string;
-  imageUrl: string;
+  name: string;
+  price: string;
+  images: { url: string }[];
+  isFeatured: boolean;
+  isArchived: boolean;
+  category: string;
+  weight: string;
+  flavor: string;
   createdAt: string;
 };
 
-export const columns: ColumnDef<BillboardColumn>[] = [
+export const columns: ColumnDef<ProductColumn>[] = [
   {
-    accessorKey: "imageUrl",
-    header: "Image",
-    cell: ({ row }) => {
-      const { imageUrl } = row.original;
-      return <CellImage imageUrl={imageUrl} />;
-    },
-  },
-  {
-    accessorKey: "label",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Label
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
+  },
+  {
+    accessorKey: "isFeatured",
+    header: "Featured",
+  },
+  {
+    accessorKey: "isArchived",
+    header: "Archived",
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+  },
+  {
+    accessorKey: "flavor",
+    header: "Flavor",
+  },
+  {
+    accessorKey: "weight",
+    header: "Weight",
   },
   {
     accessorKey: "createdAt",

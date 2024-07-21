@@ -14,19 +14,19 @@ import {
 import { storage } from "@/lib/firebase";
 import toast from "react-hot-toast";
 
-interface ImageUploadProps {
+interface ImagesUploadProps {
   disabled?: boolean;
-  onChange: (value: string) => void;
+  onChange: (value: string[]) => void;
   onRemove: (value: string) => void;
   value: string[];
 }
 
-const ImageUpload = ({
+const ImagesUpload = ({
   disabled,
   onChange,
   onRemove,
   value,
-}: ImageUploadProps) => {
+}: ImagesUploadProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [progress, setProgress] = useState<number>(0);
@@ -37,37 +37,54 @@ const ImageUpload = ({
 
   if (!isMounted) return null;
 
-  const onUpload = async (e: any) => {
-    const file = e.target.files[0];
+  const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files: File[] = Array.from(e.target.files || []);
     setLoading(true);
 
-    const uploadTask = uploadBytesResumable(
-      ref(storage, `Images/${Date.now()} - ${file.name}`),
-      file,
-      { contentType: file.type }
-    );
+    if (files.length > 0) {
+      const urls: string[] = [];
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-      },
-      (error) => {
-        toast.error(error.message);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          onChange(downloadUrl);
-          setLoading(false);
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const storageRef = ref(
+          storage,
+          `Images/products/${Date.now()}-${file.name}`
+        );
+        const uploadTask = uploadBytesResumable(storageRef, file, {
+          contentType: file.type,
         });
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setProgress(progress);
+          },
+          (error) => {
+            toast.error("Failed to upload image");
+            setLoading(false);
+          },
+          async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            urls.push(downloadURL);
+
+            if (urls.length === files.length) {
+              setLoading(false);
+              onChange([...value, ...urls]);
+            }
+          }
+        );
       }
-    );
+    }
   };
 
   const onDelete = (url: string) => {
+    const newValue = value.filter((v) => v !== url);
     onRemove(url);
+    onChange(newValue);
     deleteObject(ref(storage, url)).then(() => {
-      toast.success("Image Removed");
+      toast.success("Image deleted successfully");
     });
   };
 
@@ -85,7 +102,7 @@ const ImageUpload = ({
                   src={url}
                   fill
                   className="object-cover"
-                  alt="Billboard Image"
+                  alt="Product Image"
                 />
                 <div className="absolute z-10 top-2 right-2">
                   <Button
@@ -110,7 +127,7 @@ const ImageUpload = ({
           ) : (
             <>
               <label>
-                <div className="w-full h-full flex flex-col gap-2 items-center justify-center cursor-pointer">
+                <div className="w-full h-full flex flex-col gap-2 items-center cursor-pointer">
                   <ImagePlus className="size-4" />
                   <p>Upload Image</p>
                 </div>
@@ -119,6 +136,7 @@ const ImageUpload = ({
                   onChange={onUpload}
                   accept="image/*"
                   className="w-0 h-0"
+                  multiple
                 />
               </label>
             </>
@@ -129,4 +147,4 @@ const ImageUpload = ({
   );
 };
 
-export default ImageUpload;
+export default ImagesUpload;
