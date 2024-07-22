@@ -225,7 +225,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
                     </FormControl>
                     <SelectContent>
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem key={category.id} value={category.name}>
                           {category.name}
                         </SelectItem>
                       ))}
@@ -258,7 +258,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
                     </FormControl>
                     <SelectContent>
                       {weights.map((weight) => (
-                        <SelectItem key={weight.id} value={weight.id}>
+                        <SelectItem key={weight.id} value={weight.name}>
                           {weight.name}
                         </SelectItem>
                       ))}
@@ -291,7 +291,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
                     </FormControl>
                     <SelectContent>
                       {flavors.map((flavor) => (
-                        <SelectItem key={flavor.id} value={flavor.id}>
+                        <SelectItem key={flavor.id} value={flavor.name}>
                           {flavor.name}
                         </SelectItem>
                       ))}

@@ -12,7 +12,6 @@ type Props = {
 };
 
 const ProductPage = async ({ params }: Props) => {
-  
   const product = (await (
     await getDoc(
       doc(db, "stores", params.storeId, "products", params.productId)
