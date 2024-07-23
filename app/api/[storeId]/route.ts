@@ -1,7 +1,15 @@
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { Store } from "@/types/types";
 import { auth } from "@clerk/nextjs/server";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
 export const PATCH = async (
@@ -56,8 +64,94 @@ export const DELETE = async (
 
     const docRef = doc(db, "stores", params.storeId);
 
-    // TODO: Delete all the subcollections also data file urls
+    // Delete all the subcollections also data file urls
 
+    // BILLBOARDS & IMAGES
+    const billboardsQuerySnapshot = await getDocs(
+      collection(db, `stores/${params.storeId}/billboards`)
+    );
+    billboardsQuerySnapshot.forEach(async (billboardDoc) => {
+      await deleteDoc(billboardDoc.ref);
+      // Remove IMAGES
+      const imageUrl = billboardDoc.data().imageUrl;
+
+      if (imageUrl) {
+        const imageRef = ref(storage, imageUrl);
+        await deleteObject(imageRef);
+      }
+    });
+
+    // CATEGORIES
+    const categoriesQuerySnapshot = await getDocs(
+      collection(db, `stores/${params.storeId}/categories`)
+    );
+    categoriesQuerySnapshot.forEach(async (categoryDoc) => {
+      await deleteDoc(categoryDoc.ref);
+    });
+
+    // WEIGHTS
+    const weightsQuerySnapshot = await getDocs(
+      collection(db, `stores/${params.storeId}/weights`)
+    );
+    weightsQuerySnapshot.forEach(async (categoryDoc) => {
+      await deleteDoc(categoryDoc.ref);
+    });
+
+    // FLAVORS
+    const flavorsQuerySnapshot = await getDocs(
+      collection(db, `stores/${params.storeId}/flavors`)
+    );
+    flavorsQuerySnapshot.forEach(async (categoryDoc) => {
+      await deleteDoc(categoryDoc.ref);
+    });
+
+    // PRODUCTS & IMAGES
+    const productsQuerySnapshot = await getDocs(
+      collection(db, `stores/${params.storeId}/products`)
+    );
+    productsQuerySnapshot.forEach(async (productDoc) => {
+      await deleteDoc(productDoc.ref);
+
+      // Remove IMAGES
+      const imagesArray = productDoc.data().images;
+
+      if (imagesArray && Array.isArray(imagesArray)) {
+        await Promise.all(
+          imagesArray.map(async (image) => {
+            const imageRef = ref(storage, image.url);
+            await deleteObject(imageRef);
+          })
+        );
+      }
+    });
+
+    // ORDERS & IMAGES
+    const ordersQuerySnapshot = await getDocs(
+      collection(db, `stores/${params.storeId}/orders`)
+    );
+    ordersQuerySnapshot.forEach(async (orderDoc) => {
+      await deleteDoc(orderDoc.ref);
+
+      const orderItemsArray = orderDoc.data().orderItems;
+      if (orderItemsArray && Array.isArray(orderItemsArray)) {
+        await Promise.all(
+          orderItemsArray.map(async (orderItem) => {
+            const imagesArray = orderItem.images;
+
+            if (imagesArray && Array.isArray(imagesArray)) {
+              await Promise.all(
+                imagesArray.map(async (image) => {
+                  const imageRef = ref(storage, image.url);
+                  await deleteObject(imageRef);
+                })
+              );
+            }
+          })
+        );
+      }
+    });
+
+    // DELETE STORE
     await deleteDoc(docRef);
 
     return NextResponse.json({ message: "Store deleted" });
