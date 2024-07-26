@@ -8,16 +8,22 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { WeightColumn } from "./columns";
 import { Button } from "@/components/ui/button";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import {
+  Truck,
+  CheckCircle,
+  XCircle,
+  Copy,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import AlertModal from "@/components/modals/alert-modal";
+import { OrderColumn } from "./columns";
 
 type CellActionProps = {
-  data: WeightColumn;
+  data: OrderColumn;
 };
 
 export const CellAction = ({ data }: CellActionProps) => {
@@ -27,20 +33,35 @@ export const CellAction = ({ data }: CellActionProps) => {
   const [open, setOpen] = useState(false);
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success("Weight Copied");
+    toast.success("Order Copied");
   };
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/weights/${data.id}`);
-      toast.success("Weight deleted.");
+      await axios.delete(`/api/${params.storeId}/orders/${data.id}`);
+      toast.success("Order deleted.");
       router.refresh();
     } catch (error) {
-      toast.error("Make sure to remove all product using this weight.");
+      toast.error("Somethig went wrong. Please try again.");
     } finally {
       setLoading(false);
       setOpen(false);
+    }
+  };
+
+  const onUpdate = async (data: any) => {
+    try {
+      setLoading(true);
+      await axios.patch(`/api/${params.storeId}/orders/${data.id}`, data);
+      router.push(`/${params.storeId}/orders`);
+      toast.success("Order updated.");
+      router.refresh();
+    } catch (error) {
+      toast.error("Somethig went wrong. Please try again.");
+    } finally {
+      router.refresh();
+      setLoading(false);
     }
   };
 
@@ -60,13 +81,32 @@ export const CellAction = ({ data }: CellActionProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
           <DropdownMenuItem
             className="cursor"
-            onClick={() => router.push(`/${params.storeId}/weights/${data.id}`)}
+            onClick={() => {
+              onUpdate({ id: data.id, order_status: "Delivering" });
+            }}
           >
-            <Edit className="mr-2 size-4" />
-            Edit
+            <Truck className="mr-2 size-4" />
+            DELIVERING
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor"
+            onClick={() => {
+              onUpdate({ id: data.id, order_status: "Delivered" });
+            }}
+          >
+            <CheckCircle className="mr-2 size-4" />
+            DELIVERED
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor"
+            onClick={() => {
+              onUpdate({ id: data.id, order_status: "Cancelled" });
+            }}
+          >
+            <XCircle className="mr-2 size-4" />
+            CANCELLED
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor" onClick={() => onCopy(data.id)}>
             <Copy className="mr-2 size-4" />

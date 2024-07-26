@@ -52,7 +52,7 @@ const SettingsForm = ({ initialData }: Props) => {
   const onSubmit = async (data: SettingsFormValues) => {
     try {
       setLoading(true);
-      await axios.patch(`/api/stores/${params.storeId}`, data);
+      await axios.patch(`/api/${params.storeId}`, data);
       router.refresh();
       toast.success("Store updated.");
     } catch (error) {
@@ -65,12 +65,12 @@ const SettingsForm = ({ initialData }: Props) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/stores/${params.storeId}`);
+      await axios.delete(`/api/${params.storeId}`);
       router.refresh();
       router.push("/");
       toast.success("Store deleted.");
     } catch (error) {
-      toast.error("Make sure to delete all products and categories first.");
+      toast.error("An error occured. Please try again.");
     } finally {
       setLoading(false);
       setOpen(false);

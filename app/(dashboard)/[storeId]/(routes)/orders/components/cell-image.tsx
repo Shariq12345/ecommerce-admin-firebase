@@ -13,7 +13,7 @@ const CellImage = ({ data }: CellImageProps) => {
       {data.map((url, index) => (
         <div
           key={index}
-          className="flex items-center justify-center overflow-hidden w-16 h-16 min-h-16 min-w-16 aspect-square rounded-md"
+          className="flex items-center justify-center overflow-hidden w-16 h-16 min-h-16 min-w-16 aspect-square rounded-md relative"
         >
           <Image
             src={url}

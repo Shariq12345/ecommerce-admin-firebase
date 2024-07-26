@@ -65,7 +65,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       images: [],
       price: 0,
@@ -131,7 +131,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
             onClick={() => setOpen(true)}
           >
             <Trash className="mr-2 size-4" />
-            Delete Weight
+            Delete Product
           </Button>
         )}
       </div>
