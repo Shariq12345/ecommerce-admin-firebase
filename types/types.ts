@@ -46,6 +46,7 @@ export interface Product {
   name: string;
   price: number;
   quantity?: number;
+  description?: string;
   images: { url: string }[];
   isFeatured: boolean;
   isArchived: boolean;
@@ -57,12 +58,11 @@ export interface Product {
   updatedAt?: Timestamp;
 }
 
-
 export interface Order {
   id: string;
   isPaid: boolean;
   phone: string;
-  orderItems: Product[]
+  orderItems: Product[];
   address: string;
   order_status: string;
   createdAt?: Timestamp;

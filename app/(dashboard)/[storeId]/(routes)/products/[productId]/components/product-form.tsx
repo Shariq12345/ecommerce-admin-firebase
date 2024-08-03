@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import ImagesUpload from "@/components/images-upload";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
   initialData: Product | null;
@@ -46,9 +47,18 @@ const formSchema = z.object({
   images: z.object({ url: z.string() }).array(),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
-  category: z.string().min(1),
-  weight: z.string().min(1),
-  flavor: z.string().min(1),
+  category: z.string().min(1, {
+    message: "Please select a category",
+  }),
+  weight: z.string().min(1, {
+    message: "Please select a weight",
+  }),
+  flavor: z.string().min(1, {
+    message: "Please select a flavor",
+  }),
+  description: z.string().min(1, {
+    message: "Please enter a description",
+  }),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -74,6 +84,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
       flavor: "",
       isFeatured: false,
       isArchived: false,
+      description: "",
     },
   });
 
@@ -297,6 +308,24 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* DESCRIPTION */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      disabled={loading}
+                      placeholder="Enter Description"
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

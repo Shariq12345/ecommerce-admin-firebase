@@ -27,6 +27,7 @@ export const PATCH = async (
       images,
       isFeatured,
       isArchived,
+      description,
     } = body;
 
     if (!userId) {
@@ -37,6 +38,9 @@ export const PATCH = async (
     }
     if (!price) {
       return new NextResponse("Price is required", { status: 400 });
+    }
+    if (!description) {
+      return new NextResponse("Description is required", { status: 400 });
     }
     if (!category) {
       return new NextResponse("Category Id is required", { status: 400 });
@@ -81,6 +85,7 @@ export const PATCH = async (
           images,
           isFeatured,
           isArchived,
+          description,
           updatedAt: serverTimestamp(),
         }
       );
