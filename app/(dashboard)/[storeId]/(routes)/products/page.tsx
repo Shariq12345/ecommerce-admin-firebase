@@ -28,6 +28,7 @@ const ProductsPage = async ({ params }: Props) => {
     weight: item.weight,
     flavor: item.flavor,
     images: item.images,
+    discount: item.discount,
     createdAt: item.createdAt
       ? format(item.createdAt.toDate(), "MMMM do, yyyy")
       : "",

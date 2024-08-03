@@ -28,6 +28,7 @@ export const PATCH = async (
       isFeatured,
       isArchived,
       description,
+      discount,
     } = body;
 
     if (!userId) {
@@ -38,6 +39,9 @@ export const PATCH = async (
     }
     if (!price) {
       return new NextResponse("Price is required", { status: 400 });
+    }
+    if (!discount) {
+      return new NextResponse("Discount is required", { status: 400 });
     }
     if (!description) {
       return new NextResponse("Description is required", { status: 400 });
@@ -86,6 +90,7 @@ export const PATCH = async (
           isFeatured,
           isArchived,
           description,
+          discount,
           updatedAt: serverTimestamp(),
         }
       );

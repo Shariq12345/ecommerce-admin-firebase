@@ -15,6 +15,7 @@ export type ProductColumn = {
   category: string;
   weight: string;
   flavor: string;
+  discount?: number;
   createdAt: string;
 };
 
@@ -44,6 +45,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "isArchived",
     header: "Archived",
+  },
+  {
+    accessorKey: "discount",
+    header: "Discount",
   },
   {
     accessorKey: "category",

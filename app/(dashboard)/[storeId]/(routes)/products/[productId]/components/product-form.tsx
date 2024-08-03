@@ -59,6 +59,7 @@ const formSchema = z.object({
   description: z.string().min(1, {
     message: "Please enter a description",
   }),
+  discount: z.coerce.number().optional(),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -85,6 +86,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
       isFeatured: false,
       isArchived: false,
       description: "",
+      discount: 0,
     },
   });
 
@@ -176,6 +178,7 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
               </FormItem>
             )}
           />
+          {/* NAME */}
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -201,6 +204,25 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="0"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* DISCOUNT */}
+            <FormField
+              control={form.control}
+              name="discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{`Discount (%)`}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

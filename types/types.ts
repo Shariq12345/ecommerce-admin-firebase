@@ -53,6 +53,7 @@ export interface Product {
   category: string;
   weight: string;
   flavor: string;
+  discount?: number;
 
   createdAt?: Timestamp;
   updatedAt?: Timestamp;

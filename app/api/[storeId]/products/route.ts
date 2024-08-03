@@ -32,6 +32,7 @@ export const POST = async (
       isFeatured,
       isArchived,
       description,
+      discount,
     } = body;
 
     if (!userId) {
@@ -45,6 +46,9 @@ export const POST = async (
     }
     if (!description) {
       return new NextResponse("Description is required", { status: 400 });
+    }
+    if (!discount) {
+      return new NextResponse("Discount is required", { status: 400 });
     }
     if (!category) {
       return new NextResponse("Category Id is required", { status: 400 });
@@ -82,6 +86,7 @@ export const POST = async (
       isFeatured,
       isArchived,
       description,
+      discount,
       createdAt: serverTimestamp(),
     };
 
