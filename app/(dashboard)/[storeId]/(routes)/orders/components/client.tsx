@@ -4,11 +4,8 @@ import React from "react";
 import { columns, OrderColumn } from "./columns";
 import { useParams, useRouter } from "next/navigation";
 import Heading from "@/components/Heading";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PlusIcon } from "lucide-react";
 import { DataTable } from "@/components/data-table";
-import ApiList from "@/components/api-list";
 
 type Props = {
   data: OrderColumn[];
@@ -26,7 +23,7 @@ const OrderClient = ({ data }: Props) => {
         />
       </div>
       <Separator />
-      <DataTable columns={columns} data={data} searchKey="name" />
+      <DataTable columns={columns} data={data} searchKey="products" />
     </>
   );
 };

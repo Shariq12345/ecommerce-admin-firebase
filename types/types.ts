@@ -41,6 +41,16 @@ export interface Flavors {
   updatedAt?: Timestamp;
 }
 
+export interface Review {
+  id: string;
+  userId: string;
+  productId: string;
+  rating: number;
+  comment: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -54,6 +64,8 @@ export interface Product {
   weight: string;
   flavor: string;
   discount?: number;
+  reviews?: Review[]; // New field to store reviews
+  averageRating?: number; // New field to store the average rating
 
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
