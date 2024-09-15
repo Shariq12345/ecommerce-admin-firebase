@@ -41,16 +41,6 @@ export interface Flavors {
   updatedAt?: Timestamp;
 }
 
-export interface Review {
-  id: string;
-  userId: string;
-  productId: string;
-  rating: number;
-  comment: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
-}
-
 export interface Product {
   id: string;
   name: string;
@@ -64,9 +54,26 @@ export interface Product {
   weight: string;
   flavor: string;
   discount?: number;
-  reviews?: Review[]; // New field to store reviews
-  averageRating?: number; // New field to store the average rating
 
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+}
+
+export interface Review {
+  id: string; // Unique review ID
+  content: string; // Review content
+  rating: number; // Rating given by the user (e.g., 1-5)
+  userName: string; // Name of the user (could be stored to avoid querying users separately)
+  emailAddress: string; // Email of the user
+  productId: string; // ID of the product being reviewed
+  createdAt?: Timestamp; // When the review was created
+}
+
+export interface Offers {
+  id: string;
+  name: string;
+  code: string;
+  discount: number;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

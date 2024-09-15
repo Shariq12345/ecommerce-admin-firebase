@@ -73,7 +73,13 @@ export const PATCH = async (
       )
     ).data() as Billboards;
 
-    return NextResponse.json({ billboard });
+    const formattedBillboard = {
+      ...billboard,
+      createdAt: billboard.createdAt?.toDate().toISOString(), // Convert to ISO string
+      updatedAt: billboard.updatedAt?.toDate().toISOString(), // Convert to ISO string
+    };
+
+    return NextResponse.json({ billboard: formattedBillboard });
   } catch (error) {
     console.log(`[BILLBOARD_POST]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });

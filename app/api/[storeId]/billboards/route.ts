@@ -40,7 +40,7 @@ export const POST = async (
     const store = await getDoc(doc(db, "stores", params.storeId));
 
     if (store.exists()) {
-      let storeData = store.data();
+      const storeData = store.data();
 
       if (storeData?.userId !== userId) {
         return new NextResponse("Unauthorized", { status: 500 });
@@ -65,7 +65,20 @@ export const POST = async (
       id,
       updatedAt: serverTimestamp(),
     });
-    return NextResponse.json({ id, ...billboardData });
+
+    // Retrieve the newly created document
+    const createdBillboard = (
+      await getDoc(doc(db, "stores", params.storeId, "billboards", id))
+    ).data() as Billboards;
+
+    // Convert Firestore Timestamps to plain objects
+    const formattedBillboard = {
+      ...createdBillboard,
+      createdAt: createdBillboard.createdAt?.toDate().toISOString(),
+      updatedAt: createdBillboard.updatedAt?.toDate().toISOString(),
+    };
+
+    return NextResponse.json(formattedBillboard);
   } catch (error) {
     console.log(`[BILLBOARD_POST]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
@@ -83,11 +96,20 @@ export const GET = async (
 
     const billboardsData = (
       await getDocs(collection(doc(db, "stores", params.storeId), "billboards"))
-    ).docs.map((doc) => doc.data()) as Billboards[];
+    ).docs.map((doc) => {
+      const data = doc.data() as Billboards;
+
+      // Convert Firestore Timestamps to plain objects
+      return {
+        ...data,
+        createdAt: data.createdAt?.toDate().toISOString(),
+        updatedAt: data.updatedAt?.toDate().toISOString(),
+      };
+    });
 
     return NextResponse.json(billboardsData);
   } catch (error) {
-    console.log(`[BILLBOARD_POST]: ${error}`);
+    console.log(`[BILLBOARD_GET]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };

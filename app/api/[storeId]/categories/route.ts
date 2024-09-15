@@ -44,7 +44,7 @@ export const POST = async (
     const store = await getDoc(doc(db, "stores", params.storeId));
 
     if (store.exists()) {
-      let storeData = store.data();
+      const storeData = store.data();
 
       if (storeData?.userId !== userId) {
         return new NextResponse("Unauthorized", { status: 500 });
@@ -71,7 +71,19 @@ export const POST = async (
       updatedAt: serverTimestamp(),
     });
 
-    return NextResponse.json({ id, ...categoryData });
+    // Retrieve the newly created document
+    const createdCategory = (
+      await getDoc(doc(db, "stores", params.storeId, "categories", id))
+    ).data() as Categories;
+
+    // Convert Firestore Timestamps to plain objects
+    const formattedCategory = {
+      ...createdCategory,
+      createdAt: createdCategory.createdAt?.toDate().toISOString(),
+      updatedAt: createdCategory.updatedAt?.toDate().toISOString(),
+    };
+
+    return NextResponse.json(formattedCategory);
   } catch (error) {
     console.log(`[CATEGORY_POST]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
@@ -89,7 +101,16 @@ export const GET = async (
 
     const categoriesData = (
       await getDocs(collection(doc(db, "stores", params.storeId), "categories"))
-    ).docs.map((doc) => doc.data()) as Categories[];
+    ).docs.map((doc) => {
+      const data = doc.data() as Categories;
+
+      // Convert Firestore Timestamps to plain objects
+      return {
+        ...data,
+        createdAt: data.createdAt?.toDate().toISOString(),
+        updatedAt: data.updatedAt?.toDate().toISOString(),
+      };
+    });
 
     return NextResponse.json(categoriesData);
   } catch (error) {

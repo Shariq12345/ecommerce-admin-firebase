@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { Flavors } from "@/types/types";
+import { Offers } from "@/types/types";
 import { auth } from "@clerk/nextjs/server";
 import {
   addDoc,
@@ -19,18 +19,22 @@ export const POST = async (
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { name, value } = body;
+    const { name, code, discount } = body;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 400 });
     }
 
-    if (!value) {
-      return new NextResponse("Flavor Value is Required", { status: 400 });
+    if (!code) {
+      return new NextResponse("Offer Code is Required", { status: 400 });
+    }
+
+    if (!discount) {
+      return new NextResponse("Offer Discount is Required", { status: 400 });
     }
 
     if (!name) {
-      return new NextResponse("Flavor Name is Required", { status: 400 });
+      return new NextResponse("Offer Name is Required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -47,40 +51,29 @@ export const POST = async (
       }
     }
 
-    const flavorData = {
+    const offerData = {
       name,
-      value,
+      code,
+      discount,
       createdAt: serverTimestamp(),
     };
 
-    const flavorRef = await addDoc(
-      collection(db, "stores", params.storeId, "flavors"),
-      flavorData
+    const offerRef = await addDoc(
+      collection(db, "stores", params.storeId, "offers"),
+      offerData
     );
 
-    const id = flavorRef.id;
+    const id = offerRef.id;
 
-    const updatedFlavorData = {
-      ...flavorData,
+    await updateDoc(doc(db, "stores", params.storeId, "offers", id), {
+      ...offerData,
       id,
       updatedAt: serverTimestamp(),
-    };
-
-    await updateDoc(
-      doc(db, "stores", params.storeId, "flavors", id),
-      updatedFlavorData
-    );
-
-    // Convert timestamps to ISO strings
-    return NextResponse.json({
-      id,
-      name,
-      value,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     });
+
+    return NextResponse.json({ id, ...offerData });
   } catch (error) {
-    console.log(`[FLAVOR_POST]: ${error}`);
+    console.log(`[OFFER_POST]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
@@ -94,20 +87,13 @@ export const GET = async (
       return new NextResponse("Store Id is Required", { status: 400 });
     }
 
-    const flavorsData = (
-      await getDocs(collection(doc(db, "stores", params.storeId), "flavors"))
-    ).docs.map((doc) => {
-      const data = doc.data() as Flavors;
-      return {
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString(),
-      };
-    });
+    const offersData = (
+      await getDocs(collection(doc(db, "stores", params.storeId), "offers"))
+    ).docs.map((doc) => doc.data()) as Offers[];
 
-    return NextResponse.json(flavorsData);
+    return NextResponse.json(offersData);
   } catch (error) {
-    console.log(`[FLAVOR_GET]: ${error}`);
+    console.log(`[OFFER_GET]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };

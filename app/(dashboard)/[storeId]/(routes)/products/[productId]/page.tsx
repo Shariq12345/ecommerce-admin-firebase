@@ -1,7 +1,7 @@
 import React from "react";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Categories, Flavors, Product, Weights } from "@/types/types";
+import { Categories, Flavors, Offers, Product, Weights } from "@/types/types";
 import ProductForm from "./components/product-form";
 
 type Props = {
@@ -30,6 +30,10 @@ const ProductPage = async ({ params }: Props) => {
     await getDocs(collection(doc(db, "stores", params.storeId), "flavors"))
   ).docs.map((doc) => doc.data()) as Flavors[];
 
+  const offers = (
+    await getDocs(collection(doc(db, "stores", params.storeId), "offers"))
+  ).docs.map((doc) => doc.data()) as Offers[];
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-4">
@@ -38,6 +42,7 @@ const ProductPage = async ({ params }: Props) => {
           categories={category}
           weights={weights}
           flavors={flavors}
+          offers={offers}
         />
       </div>
     </div>

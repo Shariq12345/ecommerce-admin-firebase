@@ -6,6 +6,7 @@ import { OrderColumn } from "./components/columns";
 import { format } from "date-fns";
 import WeightClient from "./components/client";
 import { formatter } from "@/lib/utils";
+import OrderClient from "./components/client";
 
 type Props = {
   params: {
@@ -42,7 +43,7 @@ const OrdersPage = async ({ params }: Props) => {
   return (
     <div className="flex-col ">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <WeightClient data={formattedOrders} />
+        <OrderClient data={formattedOrders} />
       </div>
     </div>
   );

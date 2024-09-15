@@ -46,7 +46,7 @@ export const PATCH = async (
     const store = await getDoc(doc(db, "stores", params.storeId));
 
     if (store.exists()) {
-      let storeData = store.data();
+      const storeData = store.data();
 
       if (storeData?.userId !== userId) {
         return new NextResponse("Unauthorized", { status: 500 });
@@ -78,7 +78,14 @@ export const PATCH = async (
       )
     ).data() as Categories;
 
-    return NextResponse.json({ category });
+    // Convert Firestore Timestamps to plain objects
+    const formattedCategory = {
+      ...category,
+      createdAt: category.createdAt?.toDate().toISOString(), // Convert to ISO string
+      updatedAt: category.updatedAt?.toDate().toISOString(), // Convert to ISO string
+    };
+
+    return NextResponse.json({ category: formattedCategory });
   } catch (error) {
     console.log(`[CATEGORY_PATCH]: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
@@ -107,7 +114,7 @@ export const DELETE = async (
     const store = await getDoc(doc(db, "stores", params.storeId));
 
     if (store.exists()) {
-      let storeData = store.data();
+      const storeData = store.data();
 
       if (storeData?.userId !== userId) {
         return new NextResponse("Unauthorized", { status: 500 });

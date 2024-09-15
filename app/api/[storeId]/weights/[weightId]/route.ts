@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { Categories } from "@/types/types";
+import { Categories, Weights } from "@/types/types";
 import { auth } from "@clerk/nextjs/server";
 import {
   deleteDoc,
@@ -71,7 +71,7 @@ export const PATCH = async (
       await getDoc(
         doc(db, "stores", params.storeId, "weights", params.weightId)
       )
-    ).data() as Categories;
+    ).data() as Weights;
 
     return NextResponse.json({ weight });
   } catch (error) {

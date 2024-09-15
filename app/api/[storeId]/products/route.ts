@@ -20,7 +20,10 @@ export const POST = async (
   { params }: { params: { storeId: string } }
 ) => {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
+    const { userId, sessionId } = auth();
+    console.log("Auth Data:", { userId, sessionId });
+
     const body = await req.json();
     const {
       name,
@@ -32,7 +35,7 @@ export const POST = async (
       isFeatured,
       isArchived,
       description,
-      discount,
+      discount = 0,
     } = body;
 
     if (!userId) {
@@ -50,7 +53,7 @@ export const POST = async (
       console.log("Missing description:", description);
       return new NextResponse("Description is required", { status: 400 });
     }
-    if (!discount) {
+    if (discount === undefined || discount === null) {
       console.log("Missing discount:", discount);
       return new NextResponse("Discount is required", { status: 400 });
     }
@@ -172,6 +175,14 @@ export const GET = async (
           "==",
           searchParams.get("isArchived") === "true" ? true : false
         )
+      );
+    }
+
+    if (searchParams.has("search")) {
+      const searchQuery = searchParams.get("search");
+      queryConstraints.push(
+        where("name", ">=", searchQuery),
+        where("name", "<=", searchQuery + "\uf8ff")
       );
     }
 

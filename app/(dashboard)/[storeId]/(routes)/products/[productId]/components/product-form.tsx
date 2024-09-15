@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useParams, useRouter } from "next/navigation";
-import { Categories, Flavors, Product, Weights } from "@/types/types";
+import { Categories, Flavors, Offers, Product, Weights } from "@/types/types";
 import AlertModal from "@/components/modals/alert-modal";
 import {
   Select,
@@ -59,7 +59,7 @@ const formSchema = z.object({
   description: z.string().min(1, {
     message: "Please enter a description",
   }),
-  discount: z.coerce.number().optional(),
+  discount: z.number().min(0).default(0),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -101,10 +101,12 @@ const ProductForm = ({ initialData, categories, weights, flavors }: Props) => {
       } else {
         await axios.post(`/api/${params.storeId}/products`, data);
       }
+
       router.refresh();
       router.push(`/${params.storeId}/products`);
       toast.success(toastMessage);
     } catch (error) {
+      console.log("Form Data", data);
       toast.error("An error occurred. Please try again.");
     } finally {
       setLoading(false);
