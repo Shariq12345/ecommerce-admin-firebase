@@ -39,30 +39,39 @@ export const POST = async (
       return new NextResponse("Unauthenticated", { status: 401 });
     }
     if (!name) {
+      console.log("Missing name:", name);
       return new NextResponse("Name is required", { status: 400 });
     }
     if (!price) {
+      console.log("Missing price:", price);
       return new NextResponse("Price is required", { status: 400 });
     }
     if (!description) {
+      console.log("Missing description:", description);
       return new NextResponse("Description is required", { status: 400 });
     }
     if (!discount) {
+      console.log("Missing discount:", discount);
       return new NextResponse("Discount is required", { status: 400 });
     }
     if (!category) {
+      console.log("Missing category:", category);
       return new NextResponse("Category Id is required", { status: 400 });
     }
     if (!weight) {
+      console.log("Missing weight:", weight);
       return new NextResponse("Weight Id is required", { status: 400 });
     }
     if (!flavor) {
+      console.log("Missing flavor:", flavor);
       return new NextResponse("Flavor Id is required", { status: 400 });
     }
     if (!images || !images.length) {
+      console.log("Missing images:", images);
       return new NextResponse("Images are required", { status: 400 });
     }
     if (!params.storeId) {
+      console.log("Missing storeId:", params.storeId);
       return new NextResponse("Store ID is required", { status: 400 });
     }
 
