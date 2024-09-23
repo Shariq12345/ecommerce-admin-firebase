@@ -42,7 +42,6 @@ const ProductPage = async ({ params }: Props) => {
           categories={category}
           weights={weights}
           flavors={flavors}
-          offers={offers}
         />
       </div>
     </div>

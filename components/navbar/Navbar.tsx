@@ -35,7 +35,7 @@ const Navbar = async () => {
         <MainNav className="mx-6" />
 
         <div className="ml-auto flex items-center space-x-4">
-          <UserButton />
+          <UserButton afterSignOutUrl="/" />
         </div>
       </div>
     </div>

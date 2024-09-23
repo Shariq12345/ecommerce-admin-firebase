@@ -4,7 +4,6 @@ import { db } from "@/lib/firebase";
 import { Order } from "@/types/types";
 import { OrderColumn } from "./components/columns";
 import { format } from "date-fns";
-import WeightClient from "./components/client";
 import { formatter } from "@/lib/utils";
 import OrderClient from "./components/client";
 
@@ -34,10 +33,13 @@ const OrdersPage = async ({ params }: Props) => {
         return total;
       }, 0)
     ),
+    note: item.note,
+    message: item.cakeMessage,
     images: item.orderItems.map((item) => item.images[0].url),
-    createdAt: item.createdAt
-      ? format(item.createdAt.toDate(), "MMMM do, yyyy")
-      : "",
+    createdAt:
+      item.createdAt && "toDate" in item.createdAt
+        ? format(item.createdAt.toDate(), "MMMM do, yyyy")
+        : "",
   }));
 
   return (

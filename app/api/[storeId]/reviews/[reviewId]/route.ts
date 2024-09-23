@@ -10,7 +10,8 @@ import {
 import { NextResponse } from "next/server";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:3000", // Your frontend origin
+  "Access-Control-Allow-Origin":
+    process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000", // Your frontend origin
   "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };

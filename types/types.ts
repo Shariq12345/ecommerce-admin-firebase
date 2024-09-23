@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 
 export interface Store {
   id: string;
@@ -54,6 +54,7 @@ export interface Product {
   weight: string;
   flavor: string;
   discount?: number;
+  searchableKeywords?: string[];
 
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
@@ -78,6 +79,17 @@ export interface Offers {
   updatedAt?: Timestamp;
 }
 
+// export interface Order {
+//   id: string;
+//   isPaid: boolean;
+//   phone: string;
+//   orderItems: Product[];
+//   address: string;
+//   order_status: string;
+//   createdAt?: Timestamp;
+//   updatedAt?: Timestamp;
+// }
+
 export interface Order {
   id: string;
   isPaid: boolean;
@@ -85,6 +97,8 @@ export interface Order {
   orderItems: Product[];
   address: string;
   order_status: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  cakeMessage?: string; // Message to write on the cake
+  note?: string; // Additional note
+  createdAt?: Timestamp | FieldValue;
+  updatedAt?: Timestamp | FieldValue;
 }

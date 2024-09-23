@@ -59,7 +59,7 @@ const formSchema = z.object({
   description: z.string().min(1, {
     message: "Please enter a description",
   }),
-  discount: z.number().min(0).default(0),
+  discount: z.coerce.number().min(0).default(0),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;

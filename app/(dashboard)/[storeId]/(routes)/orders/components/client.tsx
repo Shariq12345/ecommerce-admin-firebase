@@ -2,7 +2,6 @@
 
 import React from "react";
 import { columns, OrderColumn } from "./columns";
-import { useParams, useRouter } from "next/navigation";
 import Heading from "@/components/Heading";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/data-table";
@@ -12,8 +11,6 @@ type Props = {
 };
 
 const OrderClient = ({ data }: Props) => {
-  const router = useRouter();
-  const params = useParams();
   return (
     <>
       <div className="flex items-center justify-between">

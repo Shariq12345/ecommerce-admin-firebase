@@ -28,7 +28,7 @@ export const PATCH = async (
       isFeatured,
       isArchived,
       description,
-      discount,
+      discount = 0,
     } = body;
 
     if (!userId) {
@@ -40,7 +40,8 @@ export const PATCH = async (
     if (!price) {
       return new NextResponse("Price is required", { status: 400 });
     }
-    if (!discount) {
+    if (discount === undefined || discount === null) {
+      console.log("Missing discount:", discount);
       return new NextResponse("Discount is required", { status: 400 });
     }
     if (!description) {

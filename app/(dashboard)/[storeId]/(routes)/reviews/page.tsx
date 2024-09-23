@@ -1,5 +1,5 @@
 import React from "react";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Review } from "@/types/types";
 import { ReviewColumn } from "./components/columns";
@@ -13,17 +13,22 @@ type Props = {
 };
 
 const ReviewsPage = async ({ params }: Props) => {
-  const reviewsSnapshot = await getDocs(collection(db, "reviews"));
-  const reviewData = reviewsSnapshot.docs.map((doc) => doc.data()) as Review[];
+  const reviewsData = (
+    await getDocs(collection(doc(db, "stores", params.storeId), "reviews"))
+  ).docs.map((doc) => doc.data()) as Review[];
 
-  const formattedReviews: ReviewColumn[] = reviewData.map((item) => ({
+  const formattedReviews: ReviewColumn[] = reviewsData.map((item) => ({
     id: item.id,
-    userId: item.userId,
-    rating: item.rating,
     content: item.content,
-    createdAt: item.createdAt
-      ? format(item.createdAt.toDate(), "MMMM do, yyyy")
-      : "",
+    rating: item.rating,
+    productId: item.productId,
+    emailAddress: item.emailAddress,
+    createdAt:
+      item.createdAt instanceof Timestamp
+        ? format(item.createdAt.toDate(), "MMMM do, yyyy")
+        : item.createdAt
+        ? format(new Date(item.createdAt), "MMMM do, yyyy") // Handle if already a Date or string
+        : "",
   }));
 
   return (

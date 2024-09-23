@@ -17,6 +17,8 @@ export type OrderColumn = {
   isPaid: boolean;
   order_status: string;
   createdAt: string;
+  note?: string; // Add note field
+  message?: string; // Add message field
 };
 
 export const columns: ColumnDef<OrderColumn>[] = [
@@ -32,6 +34,16 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "products",
     header: "Products",
+  },
+  {
+    accessorKey: "message",
+    header: "Message",
+    cell: ({ row }) => <p>{row.original.message || "No message"}</p>,
+  },
+  {
+    accessorKey: "note",
+    header: "Note",
+    cell: ({ row }) => <p>{row.original.note || "No note"}</p>,
   },
   {
     accessorKey: "phone",

@@ -1,45 +1,39 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 export type ReviewColumn = {
   id: string;
-  userId: string;
-  rating: number;
   content: string;
+  rating: number;
+  emailAddress: string;
+  productId: string;
   createdAt: string;
 };
 
 export const columns: ColumnDef<ReviewColumn>[] = [
   {
-    accessorKey: "rating",
-    header: "Rating",
-    cell: ({ row }) => (
-      <p
-        className={cn(
-          "text-base font-semibold",
-          row.original.rating >= 4
-            ? "text-emerald-500"
-            : row.original.rating >= 2
-            ? "text-yellow-500"
-            : "text-red-500"
-        )}
-      >
-        {row.original.rating}
-      </p>
-    ),
+    accessorKey: "id",
+    header: "Review Id",
+  },
+  {
+    accessorKey: "productId",
+    header: "Product Id",
   },
   {
     accessorKey: "content",
-    header: "Review",
-    cell: ({ row }) => <p>{row.original.content}</p>,
+    header: "Comment",
   },
   {
-    accessorKey: "userId",
-    header: "User ID",
-    cell: ({ row }) => <p>{row.original.userId}</p>,
+    accessorKey: "rating",
+    header: "Rating",
+  },
+  {
+    accessorKey: "emailAddress",
+    header: "Email Address",
   },
   {
     accessorKey: "createdAt",

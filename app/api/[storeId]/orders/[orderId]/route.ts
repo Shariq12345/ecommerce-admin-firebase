@@ -18,12 +18,11 @@ export const PATCH = async (
   try {
     const { userId } = auth();
     const body = await req.json();
+    const { order_status, cakeMessage, note } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 400 });
     }
-
-    const { order_status } = body;
 
     if (!order_status) {
       return new NextResponse("Order Status is required", { status: 400 });
@@ -34,7 +33,7 @@ export const PATCH = async (
     }
 
     if (!params.orderId) {
-      return new NextResponse("Order is required", { status: 400 });
+      return new NextResponse("Order Id is required", { status: 400 });
     }
 
     const store = await getDoc(doc(db, "stores", params.storeId));
@@ -51,13 +50,22 @@ export const PATCH = async (
     );
 
     if (orderRef.exists()) {
+      const updatedData: Partial<Order> = {
+        ...orderRef.data(),
+        order_status,
+        updatedAt: serverTimestamp(),
+      };
+
+      // Add cakeMessage and note if they exist in the body
+      if (cakeMessage) updatedData.cakeMessage = cakeMessage;
+      if (note) updatedData.note = note;
+
+      console.log("Cake Message:", cakeMessage);
+      console.log("Order Note:", note);
+
       await updateDoc(
         doc(db, "stores", params.storeId, "orders", params.orderId),
-        {
-          ...orderRef.data(),
-          order_status,
-          updatedAt: serverTimestamp(),
-        }
+        updatedData
       );
     } else {
       return new NextResponse("Order Not Found", { status: 404 });

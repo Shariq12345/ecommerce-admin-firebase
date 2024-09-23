@@ -13,7 +13,8 @@ import {
 import { NextResponse } from "next/server";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:3000", // Your frontend origin
+  "Access-Control-Allow-Origin":
+    process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000", // Your frontend origin
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
@@ -116,7 +117,7 @@ export const OPTIONS = () => {
 //   { params }: { params: { storeId: string } }
 // ) => {
 //   const corsHeaders = {
-//     "Access-Control-Allow-Origin": "http://localhost:3000",
+//     "Access-Control-Allow-Origin": process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000",,
 //   };
 
 //   try {
@@ -141,13 +142,13 @@ export const OPTIONS = () => {
 //   }
 // };
 
-
 export const GET = async (
   req: Request,
   { params }: { params: { storeId: string } }
 ) => {
   const corsHeaders = {
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin":
+      process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000",
   };
 
   // Extract productId from query parameters

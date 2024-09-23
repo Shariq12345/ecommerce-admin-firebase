@@ -10,6 +10,8 @@ const MainNav = ({
 }: React.HTMLAttributes<HTMLElement>) => {
   const params = useParams();
   const pathname = usePathname();
+
+  // Reordered routes based on priority
   const routes = [
     {
       href: `/${params.storeId}`,
@@ -27,26 +29,6 @@ const MainNav = ({
       active: pathname === `/${params.storeId}/products`,
     },
     {
-      href: `/${params.storeId}/categories`,
-      label: `Categories`,
-      active: pathname === `/${params.storeId}/categories`,
-    },
-    {
-      href: `/${params.storeId}/billboards`,
-      label: `Billboards`,
-      active: pathname === `/${params.storeId}/billboards`,
-    },
-    {
-      href: `/${params.storeId}/weights`,
-      label: `Weights`,
-      active: pathname === `/${params.storeId}/weights`,
-    },
-    {
-      href: `/${params.storeId}/flavors`,
-      label: `Flavors`,
-      active: pathname === `/${params.storeId}/flavors`,
-    },
-    {
       href: `/${params.storeId}/offers`,
       label: `Offers`,
       active: pathname === `/${params.storeId}/offers`,
@@ -57,11 +39,32 @@ const MainNav = ({
       active: pathname === `/${params.storeId}/reviews`,
     },
     {
+      href: `/${params.storeId}/categories`,
+      label: `Categories`,
+      active: pathname === `/${params.storeId}/categories`,
+    },
+    {
+      href: `/${params.storeId}/flavors`,
+      label: `Flavors`,
+      active: pathname === `/${params.storeId}/flavors`,
+    },
+    {
+      href: `/${params.storeId}/weights`,
+      label: `Weights`,
+      active: pathname === `/${params.storeId}/weights`,
+    },
+    {
+      href: `/${params.storeId}/billboards`,
+      label: `Billboards`,
+      active: pathname === `/${params.storeId}/billboards`,
+    },
+    {
       href: `/${params.storeId}/settings`,
       label: `Settings`,
       active: pathname === `/${params.storeId}/settings`,
     },
   ];
+
   return (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
       {routes.map((route) => (

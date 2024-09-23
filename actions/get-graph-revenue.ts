@@ -1,6 +1,6 @@
 import { db } from "@/lib/firebase";
 import { Order } from "@/types/types";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, Timestamp } from "firebase/firestore";
 
 interface GraphData {
   name: string;
@@ -17,21 +17,23 @@ export const getGraphRevenue = async (storeId: string) => {
   const monthlyRevenue: { [key: string]: number } = {};
 
   for (const order of paidOrders) {
-    const month = order.createdAt
-      ?.toDate()
-      .toLocaleDateString("en-IN", { month: "short" });
+    if (order.createdAt instanceof Timestamp) {
+      const month = order.createdAt
+        ?.toDate()
+        .toLocaleDateString("en-IN", { month: "short" });
 
-    if (month) {
-      let revenueForOrder = 0;
+      if (month) {
+        let revenueForOrder = 0;
 
-      for (const item of order.orderItems) {
-        if (item.quantity !== undefined) {
-          revenueForOrder += item.price * item.quantity;
-        } else {
-          revenueForOrder += item.price;
+        for (const item of order.orderItems) {
+          if (item.quantity !== undefined) {
+            revenueForOrder += item.price * item.quantity;
+          } else {
+            revenueForOrder += item.price;
+          }
         }
+        monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenueForOrder;
       }
-      monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenueForOrder;
     }
   }
 
@@ -44,7 +46,7 @@ export const getGraphRevenue = async (storeId: string) => {
     Jun: 5,
     Jul: 6,
     Aug: 7,
-    Sep: 8,
+    Sept: 8,
     Oct: 9,
     Nov: 10,
     Dec: 11,
